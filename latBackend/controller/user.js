@@ -1,5 +1,6 @@
 import { errorhandling } from "../helper/errorHandling.js";
 import models from "../model/init-models.js";
+import bcrypt from "bcrypt";
 
 const user = async (req, res) => {
   try {
@@ -14,10 +15,12 @@ const user = async (req, res) => {
 const createuser = async (req, res) => {
   try {
     const { usr, pswd } = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    const passhash = bcrypt.hashSync(pswd, salt);
     const result = await models.users.create(
       {
         username: usr,
-        password: pswd,
+        password: passhash,
       },
       { returning: true }
     );
