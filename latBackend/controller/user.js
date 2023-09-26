@@ -30,4 +30,37 @@ const createuser = async (req, res) => {
   }
 };
 
-export default { user, createuser };
+const updateUser = async (req, res) => {
+  try {
+    const { pswd } = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    const passhash = bcrypt.hashSync(pswd, salt);
+    const result = await models.users.update(
+      {
+        username: req.body.usr,
+        password: passhash,
+      },
+      {
+        where: { id: req.params.id },
+        returning: true,
+      }
+    );
+    res.send(errorhandling(errorhandling(result, 200, "Berhasil")));
+  } catch (error) {
+    res.send(errorhandling(errorhandling(result, 400, error.message)));
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const result = await models.users.destroy({
+      where: { id: req.params.id },
+      returning: true,
+    });
+    res.send(errorhandling(errorhandling(result, 200, "Berhasil")));
+  } catch (error) {
+    res.send(errorhandling(errorhandling(result, 400, error.message)));
+  }
+};
+
+export default { user, createuser, updateUser, deleteUser };
