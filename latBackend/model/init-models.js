@@ -49,3 +49,4 @@ function initModels(sequelize) {
 
 const models = initModels(sequelize);
 export default models;
+export { sequelize };
