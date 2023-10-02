@@ -4,12 +4,18 @@ import home from "../controller/home.js";
 import user from "../controller/user.js";
 import userCust from "../controller/userCust.js";
 import order from "../controller/order.js";
+import authentikasi from "../controller/authentikasi.js";
 
 const router = Router();
 
+// Login / authentikasi
+router.post("/login", authentikasi.login);
+
 router.get("/", home.home);
 
-router.get("/users", user.user);
+// Method Cek Token Sebelum getUsers, Menggunakan Middleware (Cektoken)
+router.get("/users", authentikasi.cekToken, user.user);
+
 router.post("/users", user.createuser);
 router.put("/users/:id", user.updateUser);
 router.delete("/users/:id", user.deleteUser);
